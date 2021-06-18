@@ -3,6 +3,7 @@ import os
 import requests
 import cv2
 import numpy as np
+from osgeo import gdal
 
 
 def swap(a, b):
@@ -28,8 +29,8 @@ def build_url(x, y, z):
 
 def download(x, y, z, path):
     proxies = {
-        "http": "http://127.0.0.1:10809",
-        "https": "http://127.0.0.1:10809"
+        "http": "http://127.0.0.1:19180",
+        "https": "http://127.0.0.1:19180"
     }
     url = build_url(x, y, z)
     response = requests.get(url, proxies=proxies)
@@ -66,10 +67,10 @@ def cal_tiff_box(x1, y1, x2, y2, z):
 
 
 def core():
-    path = r"C:\Users\cutec\Desktop\map"
-    point_lt = Point(114.444810, 30.489335)
-    point_rb = Point(114.459038, 30.482315)
-    z = 18
+    path = r".\map"
+    point_lt = Point(117.0357972, 36.6402741)#经纬度范围：左上
+    point_rb = Point(117.0387972, 36.6382741)#经纬度范围:右下
+    z = 22  #地图级别，最大22级
     x1, y1 = lonlat2xyz(point_lt.lon, point_lt.lat, z)
     x2, y2 = lonlat2xyz(point_rb.lon, point_rb.lat, z)
     print(x1, y1, z)
@@ -84,14 +85,14 @@ def core():
             pass
     merge(x1, y1, x2, y2, z, path)
     lt, rb = cal_tiff_box(x1, y1, x2, y2, z)
+    
     cmd = "gdal_translate -of GTiff -a_srs EPSG:4326 -a_ullr {p1_lon} " \
           "{p1_lat} {p2_lon} {p2_lat}" \
           " {input} {output}".format(p1_lon=lt.lon, p1_lat=lt.lat, p2_lon=rb.lon, p2_lat=rb.lat,
                                      input=path+"//merge.png", output=path+"//output.tiff")
-
+    
     print(cmd)
     os.system(cmd)
-
 
 def merge(x1, y1, x2, y2, z, path):
     row_list = list()

@@ -29,8 +29,8 @@ def build_url(x, y, z):
 def download(x, y, z, path):
     print('[Download]:',x,y,z,path)
     proxies = {
-        "http": "http://127.0.0.1:10809",
-        "https": "http://127.0.0.1:10809"
+        "http": "http://127.0.0.1:19180",
+        "https": "http://127.0.0.1:19180"
     }
     url = build_url(x, y, z)
     response = requests.get(url, proxies=proxies)
@@ -93,9 +93,9 @@ def downloadPlus(x1, y1, x2, y2, z, path):
         thread.join()
 
 def core(z):
-    path = r"C:\Users\cutec\Desktop\map"
+    path = r".\map"
     point_lt = Point(116.286476, 40.069985 )
-    point_rb = Point(  116.324707 , 40.054938)
+    point_rb = Point(116.324707 , 40.054938)
     x1, y1 = lonlat2xyz(point_lt.lon, point_lt.lat, z)
     x2, y2 = lonlat2xyz(point_rb.lon, point_rb.lat, z)
     print(x1, y1, z)
@@ -104,7 +104,7 @@ def core(z):
     downloadPlus(x1, y1, x2, y2, z, path)
     
 if __name__ == '__main__':
-    for i in range(16,18):
+    for i in range(17,20):
         core(i)
 
 
